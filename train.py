@@ -125,5 +125,4 @@ if __name__ == '__main__':
             best_loss = epoch_loss
             torch.save(autoencoder.state_dict(), join(logs_dir, 'model_{:03d}_loss_{:.3f}.pth'.format(epoch, best_loss)))
 
-
-        
+    print('training finished')        

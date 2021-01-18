@@ -7,6 +7,9 @@ from tqdm import tqdm
 from sklearn.manifold import TSNE
 
 from config import Config
+from utils import create_dirs
+
+import matplotlib.pyplot as plt
 
 config = Config()
 def color_plot(x, label, save_path):
@@ -19,6 +22,7 @@ def color_plot(x, label, save_path):
     ax.legend()
     plt.show()
     plt.savefig(join(save_path, 'tSNE_plot.png'), dpi=1024) 
+    print('saving 2D vis to %s' % join(save_path, 'tSNE_plot.png'))
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
@@ -37,12 +41,15 @@ if __name__ == '__main__':
     create_dirs([res_dir])
 
 
-	# X = np.loadtxt(join(data_root, dataset_name+'.txt'))
-	y = np.loadtxt(join(config.data_root, args.datasets+'_label.txt'), dtype='int')
+    # X = np.loadtxt(join(data_root, dataset_name+'.txt'))
+    y = np.loadtxt(join(config.data_root, args.datasets+'_label.txt'), dtype='int')
 
-	x = np.load(join(res_dir, 'encoding.npy'))
-	x = x.squeeze()
+    if config.formt=='npy':
+        x = np.load(join(res_dir, 'encoding.npy'))
+    else:
+        x = np.loadtxt(join(res_dir, 'encoding.txt'), dtype='float')
+    x = x.squeeze()
 
-	x_emb = TSNE(n_components=2).fit_transform(x)
+    x_emb = TSNE(n_components=2).fit_transform(x)
 
-	color_plot(x_emb, y, res_dir)
+    color_plot(x_emb, y, res_dir)

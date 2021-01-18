@@ -66,12 +66,15 @@ if __name__ == '__main__':
         for cell in tqdm(X):
             cell = torch.Tensor(cell).view(1, -1).to('cuda')
             enc, dec = autoencoder(cell)
-            enc = enc.cpu().numpy()
+            enc = enc.cpu().numpy().squeeze()
             y_enc.append(enc)
 
     y_enc = np.array(y_enc)
-    np.save(join(res_dir, 'encoding.npy'), y_enc)
-
-
-
-
+    if config.formt == 'txt':
+        np.savetxt(join(res_dir, 'encoding.txt'), y_enc)
+        print('encoded results saving to %s' % join(res_dir, 'encoding.txt'))
+    elif config.formt=='npy':
+        np.save(join(res_dir, 'encoding.npy'), y_enc)
+        print('encoded results saving to %s' % join(res_dir, 'encoding.npy'))
+    else:
+        print('Saving error. Wrong saving format')
